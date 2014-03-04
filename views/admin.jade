@@ -1,0 +1,233 @@
+mixin medit-legend(kind, el)
+  legend
+    <%= el ? 'Edit' : 'New' %>
+    != ' ' + kind
+
+mixin medit-footer(el)
+  hr
+  a.btn.btn-default(href='javascript:history.back()') Cancel
+  button.btn.btn-success(type='submit')
+    <%= el ? 'Update' : 'Create' %>
+  <% if(el) { %>
+  input(type='hidden', name='id', value!='<%= el.id %>')
+  button.btn.btn-danger.delete Delete
+  <% }; %>
+
+
+
+doctype html
+html(lang='fr')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='apprentissage de html/css/javascript/node/express/jade/backbone')
+    meta(name='author', content='Jef')
+    title Site administrator
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
+    //[if lt IE 9]
+      script(src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
+    link(rel='stylesheet', href='admin.css')
+  body
+    .navbar.navbar-inverse.navbar-fixed-top(role="navigation")
+      .container
+        .navbar-header
+          button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-ex1-collapse")
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href="/") Site administration
+
+        // Collect the nav links, forms, and other content for toggling
+        div.collapse.navbar-collapse#navbar-ex1-collapse
+          ul.nav.navbar-nav.jef
+            li.active
+              a(href="#simulations") Simulations
+            li
+              a(href="#users") Users
+            li
+              a(href="#servers") Servers
+          ul.nav.navbar-nav.navbar-right
+            li.dropdown
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                | #{username}
+                b.caret
+              ul.dropdown-menu
+                li
+                  .navbar-content
+                    .row
+                      .col-md-5
+                        img.img_responsive(src=gravatar, alt='Alternate Text')
+                        //- p.text-center.small
+                        //-   a(href='#') Change Photo
+                      .col-md-7
+                        span #{role}
+                        p.text-muted.small #{email}
+                        .divider
+                        a.btn.btn-sml(href='#') Profile
+                        a.btn.btn-sml(href='#') About
+                  .navbar-footer
+                    .navbar-footer-content
+                      .row
+                        .col-md-6
+                          a.btn.btn-default.btn-sml.active(href='/password') Change Password
+                        .col-md-6
+                          a.btn.btn-default.btn-sml.pull-right(href='/logout') Sign Out
+
+
+    .container
+      h2!=message
+
+      .page
+
+    script#site-list-template(type='text/template', style='display: none')
+      a.btn.btn-primary(href='#/new') New simulation
+      hr
+      <% _.each(l, function(el) { %>
+      .well
+        h1
+          a(href!='#/edit/<%= el.id %>') <%= el.escape('name') %>
+          | 
+          small <%= htmlEncode(el.get('description')) %>
+      <% }); %>
+
+    script#edit-site-template(type='text/template', style='display: none')
+      form.edit-site-form.form-horizontal(role='form')
+        +medit-legend('Site', el)
+        .form-group
+          label.col-sm-2.control-label(for='idname') Name
+          .col-sm-10
+            input.form-control#idname(type='text', name='name', value!='<%= el ? el.get(\'name\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='iddescr') Description
+          .col-sm-10
+            input.form-control#iddescr(type='text', name='description', value!='<%= el ? el.get(\'description\') : \'\' %>')
+        +medit-footer(el)
+
+    script#user-list-template(type='text/template', style='display: none')
+      a.btn.btn-primary(href='#/users/new') New user
+      hr
+      <% _.each(l, function(el) { %>
+      .well
+        h1
+          a(href!='#/users/edit/<%= el.id %>') <%= el.escape('username') %>
+          | 
+          small <%= htmlEncode(el.get('description')) %>
+          | 
+          small <%= htmlEncode(el.get('email')) %>
+          | 
+          small <%= htmlEncode(el.get('role')) %>
+      <% }); %>
+
+    script#edit-user-template(type='text/template', style='display: none')
+      form.edit-user-form.form-horizontal(role='form')
+        +medit-legend('User', el)
+        .form-group
+          label.col-sm-2.control-label(for='f2username') Username
+          .col-sm-10
+            input.form-control#f2username(type='text', name='username', value!='<%= el ? el.get(\'username\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='f2description') Description
+          .col-sm-10
+            input.form-control#f2description(type='text', name='description', value!='<%= el ? el.get(\'description\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='f2email') email
+          .col-sm-10
+            input.form-control#f2email(type='email', name='email', value!='<%= el ? el.get(\'email\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='f2password') Password
+          .col-sm-10
+            input.form-control#f2email(type='password', name='password', value!='<%= el ? el.get(\'password\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='f2role') Role
+          .col-sm-10
+            select.form-control#f2role(name='role')
+              option(value='admin') admin
+              option(value='preparator') preparator
+              option(value='ops') ops
+              option(value='guest') guest
+        +medit-footer(el)
+
+    script#server-list-template(type='text/template', style='display: none')
+      a.btn.btn-primary(href='#/servers/new') New server
+      hr
+      <% _.each(l, function(el) { %>
+      .well
+        h1
+          a(href!='#/servers/edit/<%= el.id %>') <%= el.escape('name') %>
+          | 
+          small <%= htmlEncode(el.get('login') + '@' + el.get('hostname') + ':' + el.get('dir') + ' port:' + el.get('port')) %>
+          br
+          small <%= htmlEncode(' mongodb:' + el.get('mongodb') + ' datadir:' + el.get('datadir') + ' ' + el.get('description')) %>
+      <% }); %>
+
+    script#edit-server-template(type='text/template', style='display: none')
+      ul.nav.nav-pills
+        li.dropdown
+          button.btn#drop1(type='button', data-toggle='dropdown')
+            | Host
+            b.caret
+          ul.dropdown-menu#menu1(role='menu', aria-labelledby='drop1')
+            li(role='presentation')
+              a(role='menuitem', tabindex='-1', href='#') Check access
+        li.dropdown
+          button.btn#drop2(type='button', data-toggle='dropdown')
+            | Server
+            b.caret
+          ul.dropdown-menu#menu2(role='menu', aria-labelledby='drop2')
+            li(role='presentation')
+              a(role='menuitem') Start
+            li.divider(role='presentation')
+            li(role='presentation')
+              a(role='menuitem') Stop
+      form.edit-server-form.form-horizontal(role='form')
+        +medit-legend('Server', el)
+        .form-group
+          label.col-sm-2.control-label(for='f3name') NickName
+          .col-sm-10
+            input.form-control#f3name(type='text', name='name', value!='<%= el ? el.get(\'name\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='f3hostname') Hostname
+          .col-sm-10
+            input.form-control#f3hostname(type='text', name='hostname', value!='<%= el ? el.get(\'hostname\') : \'\' %>')
+          button.col-sm-2.btn.btn-sml#f3ckhostname Ping Hostname
+        .form-group
+          label.col-sm-2.control-label(for='f3login') Login
+          .col-sm-10
+            input.form-control#f3login(type='text', name='login', value!='<%= el ? el.get(\'login\') : \'\' %>')
+          button.col-sm-2.btn.btn-sml#f3cklogin Test login
+        .form-group
+          label.col-sm-2.control-label(for='f3dir') Directory
+          .col-sm-10
+            input.form-control#f3dir(type='text', name='dir', value!='<%= el ? el.get(\'dir\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='f3datadir') Data Directory
+          .col-sm-10
+            input.form-control#f3datadir(type='text', name='datadir', value!='<%= el ? el.get(\'dir\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='f3mongodb') Mongodb
+          .col-sm-10
+            input.form-control#f3mongodb(type='text', name='mongodb', value!='<%= el ? el.get(\'dir\') : \'\' %>')
+        .form-group
+          label.col-sm-2.control-label(for='f3version') Version
+          .col-sm-10
+            select.form-control#f3version(name='version')
+              <% _.each(v, function (ver) { %>
+              option(value!='<%= ver %>') <%= ver %>
+              <% }); %>
+        .form-group
+          label.col-sm-2.control-label(for='f3port') Port number
+          .col-sm-10
+            input.form-control#f3port(type='text', name='port', value!='<%= el ? el.get(\'port\') : \'\' %>')
+          button.col-sm-2.btn.btn-sml#f3ckport Test Port use
+        .form-group
+          label.col-sm-2.control-label(for='f3description') Description
+          .col-sm-10
+            input.form-control#f3description(type='text', name='description', value!='<%= el ? el.get(\'description\') : \'\' %>')
+        +medit-footer(el)
+
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js')
+    script(src='admin.js')

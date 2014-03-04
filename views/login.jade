@@ -1,0 +1,30 @@
+doctype html
+html(lang='fr')
+  head
+    meta(charset='utf-8')
+    meta(name='description', content='apprentissage de html/css/javascript/node/express/jade/backbone')
+    meta(name='author', content='Jef')
+    title Login page
+    link(rel='stylesheet', href='site.css')
+  body
+   .inner
+    form(id="login", method="POST", action="/login")
+      h1 Credential
+      .inset
+        label(for='login') LOGIN
+        input#login(type='text', name='username', value='', required=true)
+        label(for='password') PASSWORD
+        input#password(type='password', name='password', required=true)
+        input#remember(type='checkbox', name='remember')
+        label(for='remember') Remember me for 1 month
+      p.p-container
+        a(href='lostlogin') Forgot password ?
+        input#go(type="submit", value="Login", name="signIn")
+    if message
+      .alert!=message
+    p
+      | inspired by: 
+      a(href='http://cssdeck.com/labs/batman-login-form') http://cssdeck.com/labs/batman-login-form
+    p
+      | another idea: 
+      a(href='http://getbootstrap.com/examples/signin') http://getbootstrap.com/examples/signin
