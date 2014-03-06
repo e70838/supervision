@@ -325,5 +325,6 @@
         $('ul.jef > li').click(function (e) {
             $('ul.jef > li').removeClass('active');
             $(this).addClass('active');                
-        });            
+        });   
+        $(document.body).tooltip({ selector: "[title]" });
     });

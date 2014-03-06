@@ -148,6 +148,13 @@ app.use(function (req, res, next) {
     next();
   }
 });
+var nonBreaking = function () {
+  var reg1 = new RegExp(' ', 'g');
+  var reg2 = new RegExp('-', 'g');
+  return function (s) {
+    return s.replace(reg1, '\u00A0').replace(reg2, '\u2011');
+  };
+}();
 app.use(function (req, res, next) {
     var err = req.flash('error'),
         msg = req.flash('success');
@@ -157,9 +164,10 @@ app.use(function (req, res, next) {
     if (req.user) {
         console.log('Jef middleware: ' + req.user.username);
         res.locals.username = req.user.username;
-        res.locals.email = req.user.email;
+        res.locals.description = nonBreaking(req.user.description);
+        res.locals.email = nonBreaking(req.user.email);
         res.locals.role  = req.user.role;
-        res.locals.gravatar = '//www.gravatar.com/avatar/' + md5(req.user.email) + '.jpg?s=103&d=monsterid';
+        res.locals.gravatar = '//www.gravatar.com/avatar/' + md5(req.user.email) + '.jpg?d=monsterid&';
     }
     next();
 });
@@ -177,6 +185,7 @@ function userExist(req, res, next) {
 
 app.get ('/', ensureAuthenticated, function(req, res) {
     if (req.user.role === 'admin') {
+        console.log('Render admin');
         res.render("admin");
     } else {
         res.send("Welcome " + req.user.username + "<br>" + "<a href='/logout'>logout</a>");

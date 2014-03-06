@@ -47,3 +47,8 @@ margin-right: 15px !important;
 	padding: 0px;
 	overflow: hidden;
 }
+
+.avatar {
+  vertical-align: middle;
+  border-radius: 3px;
+}

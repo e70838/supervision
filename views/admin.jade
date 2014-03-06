@@ -50,31 +50,30 @@ html(lang='fr')
           ul.nav.navbar-nav.navbar-right
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown')
-                | #{username}
+                img.img_responsive.avatar(src=gravatar+'s=20', alt=username, data-toggle='tooltip', data-placement='bottom', data-html='true', title=email + '<br>' + description + '<br>' + role)
+                |  #{username}
                 b.caret
               ul.dropdown-menu
                 li
-                  .navbar-content
-                    .row
-                      .col-md-5
-                        img.img_responsive(src=gravatar, alt='Alternate Text')
-                        //- p.text-center.small
-                        //-   a(href='#') Change Photo
-                      .col-md-7
-                        span #{role}
-                        p.text-muted.small #{email}
-                        .divider
-                        a.btn.btn-sml(href='#') Profile
-                        a.btn.btn-sml(href='#') About
-                  .navbar-footer
-                    .navbar-footer-content
-                      .row
-                        .col-md-6
-                          a.btn.btn-default.btn-sml.active(href='/password') Change Password
-                        .col-md-6
-                          a.btn.btn-default.btn-sml.pull-right(href='/logout') Sign Out
-
-
+                  a(href='#') Settings
+                li
+                  a(href='/password') Password
+                li
+                  a(href='#', data-target='#m1about', data-toggle='modal') About
+            li
+              a(href='/logout', data-toggle='tooltip', data-html='true', data-placement='bottom', title='Sign out')
+                span.glyphicon.glyphicon-log-out
+    .modal.fade#m1about(role='dialog', tabindex='-1', aria-labelledby='myModalLabel', aria-hidden='true')
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+            h4.modal-title About Supervision
+          .modal-body
+            p The aim of this prototype is to learn the latest best practices in web development.
+            p Having a real problem to solve avoids the simplifications of the demos.
+          .modal-footer
+            button.btn.btn-primary(type='button', data-dismiss='modal') Dismiss
     .container
       h2!=message
 
